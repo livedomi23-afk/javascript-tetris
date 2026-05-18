@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Javascript Tetris</title>
+  <title>Tetris — classgame67.com</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body      { font-family: Helvetica, sans-serif; }
     #tetris   { margin: 1em auto; padding: 1em; border: 4px solid black; border-radius: 10px; background-color: #F8F8F8; }
@@ -199,6 +200,25 @@
     function addEvents() {
       document.addEventListener('keydown', keydown, false);
       window.addEventListener('resize', resize, false);
+      // Touch support for Chromebook and mobile
+      var touchStartX, touchStartY;
+      document.addEventListener('touchstart', function(e) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        if (!playing) { play(); }
+      }, false);
+      document.addEventListener('touchend', function(e) {
+        if (touchStartX === undefined) return;
+        var dx = e.changedTouches[0].clientX - touchStartX;
+        var dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          if (dx > 20)       actions.push(DIR.RIGHT);
+          else if (dx < -20) actions.push(DIR.LEFT);
+        } else {
+          if (dy > 20)       actions.push(DIR.DOWN);
+          else if (dy < -20) actions.push(DIR.UP);
+        }
+      }, false);
     }
 
     function resize(event) {
